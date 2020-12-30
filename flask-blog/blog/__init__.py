@@ -9,7 +9,7 @@ def create_app(test_config=None):
 
     # configure the app
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY='dev1',
         DATABASE=os.path.join(app.instance_path, 'blog.sqlite'),
     )
 
