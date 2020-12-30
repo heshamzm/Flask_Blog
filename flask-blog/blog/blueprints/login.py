@@ -32,7 +32,7 @@ def login():
                 # check if credentials are valid
                 if user['username'] == username and user['password'] == password:
                     # store the user ID in the session  
-                    session['uid']= user['id']  
+                    session['uid'] = user['id']  
                     session['username'] = user['username']
             return redirect("/posts")
 
@@ -44,9 +44,9 @@ def login():
     
         
 
-@login_bp.route('/session')
-def show_session():
-    return dict(session)
+# @login_bp.route('/session')
+# def show_session():
+#     return dict(session)
 
 @login_bp.route('/logout')
 def logout():
