@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,request ,redirect, session
+from flask import Blueprint, render_template,request ,redirect, session , flash
 from blog.db import get_db
 import sqlite3
 from flask_wtf import FlaskForm
@@ -19,6 +19,53 @@ class Edit(FlaskForm):
     last_name = StringField("Last name : ", [validators.InputRequired()])
     biography = TextAreaField("Biography : ")
     edit = SubmitField("Edit User")
+
+
+class Change_Password(FlaskForm):
+    old_password = PasswordField("Old Password : ", [validators.InputRequired()])
+    new_password = PasswordField("New Password : ", [validators.InputRequired()])
+    submit = SubmitField("Change Password")
+
+
+
+@user_bp.route('/change_password' , methods=['POST' , 'GET'])
+def change_password():
+    change_form = Change_Password()
+    
+    if change_form.validate_on_submit():
+        oldpassword = change_form.old_password.data
+        newpassword = change_form.new_password.data
+    
+
+        current_user = session['uid']
+        db = get_db()
+        user = db.execute('SELECT * FROM user WHERE id LIKE ?',(current_user,)).fetchone()
+
+        if oldpassword ==  user['password']:
+            if oldpassword != newpassword:
+            
+                try:
+
+                    db.execute(f"UPDATE user SET password = '{newpassword}' WHERE id = '{current_user}' ")
+                        
+                        
+                    db.commit()
+                    
+                    return redirect("/users")
+
+                except sqlite3.Error as er:
+                    print('SQLite error: %s' % (' '.join(er.args)))
+                    return redirect("/404")
+            
+            else :
+                pass
+        
+
+        else:
+            pass
+
+
+    return render_template('user/change_password.html' , form = change_form )
 
 
 @user_bp.route('/session')
