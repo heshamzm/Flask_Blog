@@ -12,11 +12,13 @@ class User(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
     password = PasswordField("Password : ", [validators.InputRequired()])
     submit = SubmitField("Add User")
-    edit = SubmitField("Edit User")
+    
 
+class Edit(FlaskForm):
     first_name = StringField("First name : ", [validators.InputRequired()])
     last_name = StringField("Last name : ", [validators.InputRequired()])
     biography = TextAreaField("Biography : ")
+    edit = SubmitField("Edit User")
 
 
 @user_bp.route('/session')
@@ -57,17 +59,11 @@ def add_user():
 @user_bp.route('/profile' , methods=['GET', 'POST'])
 def profile():
 
-    # profile = User()
-
-    # username = profile.username.data
-
     current_user = session['uid']
 
     db = get_db()
 
-    # user= db.execute('SELECT * FROM user WHERE username LIKE ?',(username,)).fetchone()
-
-    user = db.execute(" SELECT * FROM user WHERE id = '1' ").fetchone()
+    user = db.execute('SELECT * FROM user WHERE id LIKE ?',(current_user,)).fetchone()
 
     return render_template("user/profile.html", user = user) 
 
@@ -75,20 +71,24 @@ def profile():
 @user_bp.route('/edit/user', methods=['GET', 'POST'])
 def edit_user():
 
-    edit_form = User()
+    current_user = session['uid']
+
+    edit_form = Edit()
 
     if edit_form.validate_on_submit():
         new_firstname = edit_form.first_name.data
         new_lasttname = edit_form.last_name.data
         new_bio = edit_form.biography.data
 
+        print(new_firstname)
+
         db = get_db()
 
         try:
             
-            db.execute("""UPDATE user
-SET firstname = 'new_firstname', lastname = 'new_lasttname', biography = 'new_bio',
-WHERE id = 'session[uid]';""")
+            db.execute(f"""UPDATE user
+SET firstname = '{new_firstname}', lastname = '{new_lasttname}', biography = '{new_bio}'
+WHERE id = '{current_user}' """)
             
             db.commit()
 
