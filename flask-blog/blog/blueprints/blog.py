@@ -1,12 +1,30 @@
-from flask import Blueprint, render_template,request ,session, redirect
+from flask import Blueprint, render_template,request ,session, redirect,url_for
 from blog.db import get_db
 import sqlite3
 import datetime
+from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
 
 # define our blueprint
 blog_bp = Blueprint('blog', __name__)
+
+def login_required(f):
+    @wraps(f)
+
+    
+    def check(*args, **kwargs):
+        
+
+        if 'username' in session:
+            return f(*args, **kwargs)
+            
+        else:
+
+            return redirect('/login')
+            # , next=request.url )
+            
+    return check
 
 
 class PostForm(FlaskForm):
@@ -17,6 +35,7 @@ class PostForm(FlaskForm):
 
 @blog_bp.route('/')
 @blog_bp.route('/posts')
+@login_required
 def index():
     # get the DB connection
     db = get_db()
@@ -32,6 +51,7 @@ def index():
     return render_template('blog/index.html', posts = posts)
 
 @blog_bp.route('/add/post', methods = ['GET', 'POST'])
+@login_required
 def add_post():
     post_form = PostForm()
 

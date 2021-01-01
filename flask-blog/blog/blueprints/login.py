@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,request ,redirect,session
+from flask import Blueprint, render_template,request ,redirect,session,flash
 from blog.db import get_db
 import sqlite3
 from flask_wtf import FlaskForm
@@ -34,7 +34,7 @@ def login():
                     # store the user ID in the session  
                     session['uid'] = user['id']  
                     session['username'] = user['username']
-            return redirect("/posts")
+            return redirect("/profile")
 
         except sqlite3.Error as er:
             print('SQLite error: %s' % (' '.join(er.args)))

@@ -6,7 +6,9 @@
 {% endblock %}
 
 <!-- content block -->
-{% block content %} 
+{% block content %}
+
+
 <article class="post">
   <header>
     <div>
@@ -14,6 +16,12 @@
       <h1>firstname: {{ user['firstname'] }}</h1>
       <h1>lastname: {{ user['lastname'] }}</h1>
       <h1>biography: {{ user['biography'] }}</h1>
+      <h1>Posts you have published : {{i}}</h1>
+      {% for post in posts %}
+      <h1>{{loop.index}}) {{post.body}}</h1>
+      {% endfor %}
+      
+      
     </div>
   </header>
 </article>

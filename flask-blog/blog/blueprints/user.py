@@ -1,11 +1,29 @@
 from flask import Blueprint, render_template,request ,redirect, session , flash
 from blog.db import get_db
 import sqlite3
+from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField
 
 # define our blueprint
 user_bp = Blueprint('user', __name__)
+
+def login_required(f):
+    @wraps(f)
+
+    
+    def check(*args, **kwargs):
+        
+
+        if 'username' in session:
+            return f(*args, **kwargs)
+            
+        else:
+
+            return redirect('/login')
+            # , next=request.url )
+            
+    return check
 
 
 class User(FlaskForm):
@@ -29,6 +47,7 @@ class Change_Password(FlaskForm):
 
 
 @user_bp.route('/change_password' , methods=['POST' , 'GET'])
+@login_required
 def change_password():
     change_form = Change_Password()
     
@@ -73,6 +92,7 @@ def show_session():
     return dict(session)
 
 @user_bp.route('/add/user', methods=['GET', 'POST'])
+@login_required
 def add_user():
 
     user = User()
@@ -104,6 +124,7 @@ def add_user():
     return render_template('user/index.html' , form = user )
 
 @user_bp.route('/profile' , methods=['GET', 'POST'])
+@login_required
 def profile():
 
     current_user = session['uid']
@@ -111,11 +132,19 @@ def profile():
     db = get_db()
 
     user = db.execute('SELECT * FROM user WHERE id LIKE ?',(current_user,)).fetchone()
+    posts = db.execute('SELECT * FROM post WHERE author_id LIKE ? ORDER BY created DESC',(current_user,)).fetchmany(3)
 
-    return render_template("user/profile.html", user = user) 
+    
+    for i in range(len(posts)):        
+        i = i + 1  
+        
+    flash('You were successfully logged in')
+
+    return render_template("user/profile.html", user = user, posts = posts , i = i) 
 
 
 @user_bp.route('/edit/user', methods=['GET', 'POST'])
+@login_required
 def edit_user():
 
     current_user = session['uid']
@@ -150,6 +179,7 @@ WHERE id = '{current_user}' """)
     
 
 @user_bp.route('/users')
+@login_required
 def get_users():
     # get the DB connection
     db = get_db()

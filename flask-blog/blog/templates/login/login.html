@@ -13,6 +13,7 @@
 {% endif %}
 <form method="POST" action="">
   {{ form.hidden_tag() }}
+  <!-- <input type="hidden" name="next_url" value="{{request.args.get('next' , '')}}"> -->
   <div class="row">
     <div class="col-md-6 mb-3">
       {{form.username.label}}
