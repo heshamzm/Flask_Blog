@@ -98,6 +98,7 @@ def show_session():
 
 @user_bp.route('/add/user', methods=['GET', 'POST'])
 @login_required
+
 def add_user():
 
     user = User()
@@ -155,16 +156,16 @@ def edit_user():
     current_user = session['uid']
 
     edit_form = Edit() # 
-
+    if request.method == "GET":
     #set values in the form
-    edit_form.first_name.data=session['firstname']
-    edit_form.last_name.data=session['lastname']
-    edit_form.biography.data=session['biography']
-    print(edit_form.first_name)
+        edit_form.first_name.data=session['firstname']
+        edit_form.last_name.data=session['lastname']
+        edit_form.biography.data=session['biography']
+        print(edit_form.first_name)
 
     
 
-    if edit_form.validate_on_submit():
+    if  edit_form.validate_on_submit():
         new_firstname = edit_form.first_name.data
         new_lasttname = edit_form.last_name.data
         new_bio = edit_form.biography.data
@@ -181,6 +182,9 @@ WHERE id = '{current_user}' """)
             
             db.commit()
 
+            session['firstname'] = new_firstname
+            session['lastname'] = new_lasttname
+            session['biography'] = new_bio
 
             return redirect('/profile') 
 
