@@ -34,6 +34,10 @@ def login():
                     # store the user ID in the session  
                     session['uid'] = user['id']  
                     session['username'] = user['username']
+                    session['firstname'] = user['firstname']
+                    session['lastname'] = user['lastname']
+                    session['biography'] = user['biography']
+                    
             return redirect("/profile")
 
         except sqlite3.Error as er:

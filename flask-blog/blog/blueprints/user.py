@@ -3,7 +3,8 @@ from blog.db import get_db
 import sqlite3
 from functools import wraps
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField
+from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField 
+
 
 # define our blueprint
 user_bp = Blueprint('user', __name__)
@@ -30,7 +31,10 @@ class User(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
     password = PasswordField("Password : ", [validators.InputRequired()])
     submit = SubmitField("Add User")
-    
+    first_name = StringField("First name : ", [validators.InputRequired()])
+    last_name = StringField("Last name : ", [validators.InputRequired()])
+    biography = TextAreaField("Biography : ")
+
 
 class Edit(FlaskForm):
     first_name = StringField("First name : ", [validators.InputRequired()])
@@ -41,7 +45,8 @@ class Edit(FlaskForm):
 
 class Change_Password(FlaskForm):
     old_password = PasswordField("Old Password : ", [validators.InputRequired()])
-    new_password = PasswordField("New Password : ", [validators.InputRequired()])
+    password = PasswordField('New Password', [validators.InputRequired(), validators.EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField("Confirm Password : ", [validators.InputRequired()])
     submit = SubmitField("Change Password")
 
 
@@ -53,7 +58,7 @@ def change_password():
     
     if change_form.validate_on_submit():
         oldpassword = change_form.old_password.data
-        newpassword = change_form.new_password.data
+        newpassword = change_form.password.data
     
 
         current_user = session['uid']
@@ -135,12 +140,12 @@ def profile():
     posts = db.execute('SELECT * FROM post WHERE author_id LIKE ? ORDER BY created DESC',(current_user,)).fetchmany(3)
 
     
-    for i in range(len(posts)):        
-        i = i + 1  
+    # for i in range(len(posts)):        
+    #     i = i + 1  
         
     flash('You were successfully logged in')
 
-    return render_template("user/profile.html", user = user, posts = posts , i = i) 
+    return render_template("user/profile.html", user = user, posts = posts ) 
 
 
 @user_bp.route('/edit/user', methods=['GET', 'POST'])
@@ -149,7 +154,15 @@ def edit_user():
 
     current_user = session['uid']
 
-    edit_form = Edit()
+    edit_form = Edit() # 
+
+    #set values in the form
+    edit_form.first_name.data=session['firstname']
+    edit_form.last_name.data=session['lastname']
+    edit_form.biography.data=session['biography']
+    print(edit_form.first_name)
+
+    
 
     if edit_form.validate_on_submit():
         new_firstname = edit_form.first_name.data

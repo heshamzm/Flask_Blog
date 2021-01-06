@@ -16,7 +16,7 @@
       <h1>firstname: {{ user['firstname'] }}</h1>
       <h1>lastname: {{ user['lastname'] }}</h1>
       <h1>biography: {{ user['biography'] }}</h1>
-      <h1>Posts you have published : {{i}}</h1>
+      <h1>Posts you have published : {{posts | length}}</h1>
       {% for post in posts %}
       <h1>{{loop.index}}) {{post.body}}</h1>
       {% endfor %}
