@@ -12,6 +12,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password : ", [validators.InputRequired()])
     submit = SubmitField("Log In")
 
+
 @login_bp.route('/login', methods =['POST','GET'])
 def login():
     login = LoginForm()
@@ -27,6 +28,9 @@ def login():
         try:
             # get user by username
             user= db.execute('SELECT * FROM user WHERE username LIKE ?',(username,)).fetchone()
+            
+            # print(type(user['id']))
+            
             # check if username exists
             if user  != None:
                 # check if credentials are valid

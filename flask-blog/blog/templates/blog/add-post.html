@@ -7,19 +7,16 @@
 
 <!-- content block -->
 {% block content %}
-<form method="POST" action="">
+<form method="POST" class="form-group">
   {{ form.hidden_tag() }}
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      {{ form.title.label }}
-      {{ form.title() }}
-    </div>
-    <div class="col-md-6 mb-3">
-      {{ form.body.label }}
-      {{ form.body() }}
-    </div>
-  </div>
-  <hr class="mb-4" />
+
+  {{ form.title.label }}
+  {{ form.title() }}
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+  {{ form.body.label }}
+  {{ form.body() }}
+
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
   {{ form.submit() }}
 </form>
 {% endblock %}

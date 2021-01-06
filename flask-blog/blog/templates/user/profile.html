@@ -13,17 +13,42 @@
   <header>
     <div>
       <h1>username: {{ user['username'] }}</h1>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
       <h1>firstname: {{ user['firstname'] }}</h1>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
       <h1>lastname: {{ user['lastname'] }}</h1>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
       <h1>biography: {{ user['biography'] }}</h1>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
       <h1>Posts you have published : {{posts | length}}</h1>
       {% for post in posts %}
-      <h1>{{loop.index}}) {{post.body}}</h1>
+      <h1>{{loop.index}} - {{post.body}}</h1>
       {% endfor %}
-      
-      
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
     </div>
+
+
   </header>
 </article>
+<br> <br>
+<div>
+  <center>
+
+    <a href="/edit/user" class="btn btn-primary " target="_blank" type="button" role="button"> Edit My Profile
+      </a>
+
+    <a href="/add/post" class="btn btn-primary " target="_blank" type="button" role="button"> Add Post </a>
+
+    <a href="/add/user" class="btn btn-primary " target="_blank" type="button" role="button"> Add User </a>
+
+    <a href="/" class="btn btn-primary " target="_blank" type="button" role="button"> Display All Posts </a>
+
+    <a href="/users" class="btn btn-primary " target="_blank" type="button" role="button"> Display All Users </a>
+
+
+  </center>
+</div>
+
+
 
 {% endblock %}

@@ -10,29 +10,29 @@
 <form method="POST" action="">
   {{ form.hidden_tag() }}
 
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      {{ form.username.label }}
-      {{ form.username() }}
-    </div>
-    <div class="col-md-6 mb-3">
-      {{ form.first_name.label }}
-      {{ form.first_name() }}
-    </div>
-    <div class="col-md-6 mb-3">
-      {{ form.last_name.label }}
-      {{ form.last_name() }}
-    </div>
-    <div class="col-md-6 mb-3">
-      {{ form.password.label }}
-      {{ form.password() }}
-    </div>
-    <div class="col-md-6 mb-3">
-      {{ form.biography.label }}
-      {{ form.biography() }}
-    </div>
-  </div>
-  <hr class="mb-4" />
+
+  {{ form.username.label }}
+  {{ form.username() }}
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+
+  {{ form.first_name.label }}
+  {{ form.first_name() }}
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+  {{ form.last_name.label }}
+  {{ form.last_name() }}
+
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+  {{ form.password.label }}
+  {{ form.password() }}
+
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+  {{ form.biography.label }}
+  {{ form.biography() }}
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
   {{ form.submit() }}
 </form>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 <!-- header block -->
 {% block header %}
+
 <h1>{% block title %}Login{% endblock %}</h1>
 {% endblock %}
 
@@ -12,19 +13,23 @@
 </div>
 {% endif %}
 <form method="POST" action="">
-  {{ form.hidden_tag() }}
-  <!-- <input type="hidden" name="next_url" value="{{request.args.get('next' , '')}}"> -->
-  <div class="row">
+  <center>
+    {{ form.hidden_tag() }}
+    <!-- <input type="hidden" name="next_url" value="{{request.args.get('next' , '')}}"> -->
+
     <div class="col-md-6 mb-3">
       {{form.username.label}}
       {{form.username()}}
     </div>
+
     <div class="col-md-6 mb-3">
       {{form.password.label}}
       {{form.password()}}
     </div>
-  </div>
-  <hr class="mb-4" />
-  {{form.submit()}}
+
+    <hr class="mb-4" />
+    {{form.submit()}}
+
 </form>
+</center>
 {% endblock %}
