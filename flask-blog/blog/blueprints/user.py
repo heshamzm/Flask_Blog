@@ -5,6 +5,7 @@ from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField 
 
+#obj/action/id
 
 # define our blueprint
 user_bp = Blueprint('user', __name__)
@@ -22,7 +23,7 @@ def login_required(f):
         else:
 
             return redirect('/login')
-            # , next=request.url )
+            
             
     return check
 

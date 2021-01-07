@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,request ,session, redirect,url_for
+from flask import Blueprint, render_template,request ,session, redirect,url_for, flash
 from blog.db import get_db
 import sqlite3
 import datetime
@@ -32,6 +32,10 @@ class PostForm(FlaskForm):
     body = TextAreaField("Post Body: ", [validators.InputRequired()])
     submit = SubmitField("Create Post")
 
+class EditPostForm(FlaskForm):
+    new_title = StringField("Post Title: ", [validators.InputRequired()])
+    new_body = TextAreaField("Post Body: ", [validators.InputRequired()])
+    submit = SubmitField("Edit Post")
 
 @blog_bp.route('/')
 @blog_bp.route('/posts')
@@ -50,9 +54,28 @@ def index():
     # render 'blog' blueprint with posts
     return render_template('blog/index.html', posts = posts)
 
+
+@blog_bp.route('/posts/display/<int:id>')
+@login_required
+def display_myposts(id):
+        # get the DB connection
+    db = get_db()
+
+    # retrieve all posts
+    posts = db.execute(f'''select * from post WHERE author_id = {id}''').fetchall()
+    user = db.execute(f'''select * from user WHERE id = {id}''').fetchall()
+
+
+    # render 'blog' blueprint with posts
+    return render_template('blog/display.html', posts = posts , user=user)
+
+
+
 @blog_bp.route('/add/post', methods = ['GET', 'POST'])
 @login_required
 def add_post():
+
+
     post_form = PostForm()
 
     if post_form.validate_on_submit():
@@ -86,3 +109,61 @@ def add_post():
     
     # else, render the template
     return render_template("blog/add-post.html", form = post_form)
+
+
+@blog_bp.route('/post/delete/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def delete_post(id):
+
+    # get the DB connection
+    db = get_db()
+
+    
+    
+    delete=db.execute(f"DELETE FROM post WHERE id = '{id}' ")
+    
+    db.commit()
+
+
+    # render 'blog' blueprint with posts
+    return render_template('blog/display.html',  delete = delete)
+
+
+
+
+@blog_bp.route('/post/edit/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def edit_post(id):
+
+    edit_post_form = EditPostForm() # 
+
+    
+    if edit_post_form.validate_on_submit():
+        # read post values from the form
+        new_title = edit_post_form.new_title.data
+        new_body = edit_post_form.new_body.data 
+
+
+        # get the DB connection
+        db = get_db()
+        
+        
+        try:
+            
+            db.execute(f"UPDATE post SET title = '{new_title}', body = '{new_body}' WHERE id = '{id}' ")    
+            
+            # commit changes to the database
+            db.commit()
+            
+            return redirect('/posts') 
+
+        except sqlite3.Error as er:
+            print(f"SQLite error: { (' '.join(er.args)) }")
+            return redirect("/404")
+
+    # if the user is not logged in, redirect to '/login' 
+    if "uid" not in session:
+        return redirect('/login')
+    
+    # else, render the template
+    return render_template("blog/edit_post.html", form = edit_post_form)

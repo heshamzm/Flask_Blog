@@ -7,32 +7,37 @@
 
 <!-- content block -->
 {% block content %}
-<form method="POST" action="">
-  {{ form.hidden_tag() }}
 
+<div class="div container">
+     
+  <form method="POST" class="form-group">
+      {{ form.hidden_tag() }}
 
-  {{ form.username.label }}
-  {{ form.username() }}
-  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      {{form.username.label}}
+      {{form.username(class_="form-control")}}
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+      {{form.first_name.label}}
+      {{form.first_name(class_="form-control")}}
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+      {{form.last_name.label}}
+      {{form.last_name(class_="form-control")}}
 
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+        
+      {{form.password.label}}
+      {{form.password(class_="form-control")}}
 
-  {{ form.first_name.label }}
-  {{ form.first_name() }}
-  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+      {{form.biography.label}}
+      {{form.biography(class_="form-control")}}
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
-  {{ form.last_name.label }}
-  {{ form.last_name() }}
+      <center>  {{form.submit(class_="btn btn-secondary")}}   </center>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
-  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-  {{ form.password.label }}
-  {{ form.password() }}
-
-  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-
-  {{ form.biography.label }}
-  {{ form.biography() }}
-  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-
-  {{ form.submit() }}
-</form>
+  </form> </div>
 {% endblock %}

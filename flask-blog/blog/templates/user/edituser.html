@@ -7,19 +7,28 @@
 
 <!-- content block -->
 {% block content %}
-<form method="POST" class="form-group">
-  {{ form.hidden_tag() }}
 
-      {{ form.first_name.label }}
-      {{ form.first_name() }}
-      <hr>
-      {{ form.last_name.label }}
-      {{ form.last_name() }}
-      <hr>
-      {{ form.biography.label }}
-      {{ form.biography() }}
-   
-  <hr>
- <center> {{ form.edit() }} </center>
-</form>
+<div class="div container">
+     
+  <form method="POST" class="form-group">
+      {{ form.hidden_tag() }}
+
+      {{form.first_name.label}}
+      {{form.first_name(class_="form-control")}}
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+      {{form.last_name.label}}
+      {{form.last_name(class_="form-control")}}
+
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      
+      {{form.biography.label}}
+      {{form.biography(class_="form-control")}}
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+      <center>  {{form.edit(class_="btn btn-secondary")}}   </center>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+  </form> </div>
+
 {% endblock %}

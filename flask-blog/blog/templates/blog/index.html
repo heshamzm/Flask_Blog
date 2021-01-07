@@ -14,17 +14,15 @@
     <div>
       <h1>{{ post['title'] }}</h1>
       <d iv class="about">
-        by {{ post['firstname']  }} {{ post['lastname']  }} on {{ post['created'] }}
+        By {{ post['firstname']  }} {{ post['lastname']  }} on {{ post['created'] }}
       </div>
     </div>
   </header>
   <p class="body">{{ post['body'] }}</p>
 </article>
-
-{% if not loop.last %}
-<hr />
-{% endif %} 
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+ 
 
 {% endfor %} 
-<center><a href="/profile" class="btn btn-primary " type="button" role="button"> Your Profile </a></center>
+<center><a href="/profile" class="btn btn-secondary " type="button" role="button"> Your Profile </a></center>
 {% endblock %}

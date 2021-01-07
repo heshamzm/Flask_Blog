@@ -11,13 +11,13 @@
   <header>
     <div>
       <h1>{{ user['username'] }}</h1>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
     </div>
   </header>
 </article>
 
-{% if not loop.last %}
-<hr />
-{% endif %} {% endfor %} 
-<center><a href="/profile" class="btn btn-primary "  type="button" role="button"> Your Profile </a></center>
+
+<center><a href="/profile" class="btn btn-secondary "  type="button" role="button"> Your Profile </a></center>
 
 {% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %} 
+
+<!-- header block -->
+{% block header %}
+<h3>{% block title %}Your-Posts{% endblock %}</h3>
+{% endblock %}
+
+<!-- content block -->
+{% block content %} 
+
+{% for post in posts %}
+
+<center>
+<div class="container mt-4">    
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h2 class="card-title">{{ post['title'] }}</h2>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      <h6 class="card-subtitle mb-2 text-muted">By {{session['firstname'] | title}} {{ session['lastname'] | title}} on <br> {{ post['created'] }}</h6>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      <p class="card-text">{{ post['body'] }}</p>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+      <a href="{{url_for('blog.edit_post',id=session['uid'])}}" class="card-link" title="Edit"><i class="far fa-edit"></i></a>
+      <a href="{{url_for('blog.delete_post',id=session['uid'])}}" class="card-link" title="Delete"><i class="far fa-trash-alt"></i></a>
+    </div>
+  </div>
+</div>
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+{% endfor %} 
+<br>
+<a href="/profile" class="btn btn-secondary " type="button" role="button"> Your Profile </a></center>
+{% endblock %}
