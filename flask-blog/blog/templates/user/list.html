@@ -6,7 +6,8 @@
 {% endblock %}
 
 <!-- content block -->
-{% block content %} {% for user in users %}
+{% block content %} 
+{% for user in users %}
 <article class="post">
   <header>
     <div>
@@ -16,8 +17,8 @@
     </div>
   </header>
 </article>
+{% endfor %}
 
-
-<center><a href="/profile" class="btn btn-secondary "  type="button" role="button"> Your Profile </a></center>
+<center><a href="/profile" class="btn btn-secondary " type="button" role="button"> Your Profile </a></center>
 
 {% endblock %}

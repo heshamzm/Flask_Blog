@@ -3,10 +3,18 @@
 <!-- header block -->
 {% block header %}
 <h1>{% block title %}Profile{% endblock %}</h1>
+
+
 {% endblock %}
 
 <!-- content block -->
-{% block content %}
+{% block content %} 
+
+{% if message %}
+<div>
+  {{message}}
+</div>
+{% endif %}
 
 <center>
 <article class="post">
@@ -49,9 +57,9 @@
     <a href="/edit/user" class="btn btn-secondary " target="_blank" type="button" role="button"> Edit My Profile
     </a>
 
-    <a href="/add/post" class="btn btn-secondary " target="_blank" type="button" role="button"> Add Post </a>
+    <a href="/add/post" class="btn btn-secondary "  type="button" role="button"> Add Post </a>
 
-    <a href="/add/user" class="btn btn-secondary " target="_blank" type="button" role="button"> Add User </a>
+    <a href="/add/user" class="btn btn-secondary " type="button" role="button"> Add User </a>
 
     <a href="/" class="btn btn-secondary " target="_blank" type="button" role="button"> Display All Posts </a>
 

@@ -93,13 +93,15 @@ def change_password():
     return render_template('user/change_password.html' , form = change_form )
 
 
+
 @user_bp.route('/session')
 def show_session():
     return dict(session)
 
+
+
 @user_bp.route('/add/user', methods=['GET', 'POST'])
 @login_required
-
 def add_user():
 
     user = User()
@@ -130,6 +132,8 @@ def add_user():
 
     return render_template('user/index.html' , form = user )
 
+
+
 @user_bp.route('/profile' , methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -139,7 +143,7 @@ def profile():
     db = get_db()
 
     user = db.execute('SELECT * FROM user WHERE id LIKE ?',(current_user,)).fetchone()
-    posts = db.execute('SELECT * FROM post WHERE author_id LIKE ? ORDER BY created DESC',(current_user,)).fetchmany(3)
+    posts = db.execute('SELECT * FROM post WHERE author_id LIKE ? ORDER BY created DESC',(current_user,)).fetchall()
 
     
     # for i in range(len(posts)):        
@@ -148,6 +152,7 @@ def profile():
     flash('You were successfully logged in')
 
     return render_template("user/profile.html", user = user, posts = posts ) 
+
 
 
 @user_bp.route('/edit/user', methods=['GET', 'POST'])
@@ -194,7 +199,8 @@ WHERE id = '{current_user}' """)
             return redirect("/404")
 
     return render_template("user/edituser.html", form = edit_form)
-    
+
+
 
 @user_bp.route('/users')
 @login_required

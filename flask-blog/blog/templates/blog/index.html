@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 <!-- header block -->
 {% block header %}
@@ -6,7 +6,7 @@
 {% endblock %}
 
 <!-- content block -->
-{% block content %} 
+{% block content %}
 
 {% for post in posts %}
 <article class="post">
@@ -14,15 +14,16 @@
     <div>
       <h1>{{ post['title'] }}</h1>
       <d iv class="about">
-        By {{ post['firstname']  }} {{ post['lastname']  }} on {{ post['created'] }}
-      </div>
+        By {{ post['firstname'] }} {{ post['lastname'] }} on {{ post['created'] }}
+    </div>
     </div>
   </header>
   <p class="body">{{ post['body'] }}</p>
+  <a href="{{url_for('blog.reply_post',id=post['id'])}}"> Reply <i class="fas fa-reply"></i> </a>
 </article>
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
- 
 
-{% endfor %} 
+{% endfor %}
 <center><a href="/profile" class="btn btn-secondary " type="button" role="button"> Your Profile </a></center>
-{% endblock %}
+
+{% endblock content %}

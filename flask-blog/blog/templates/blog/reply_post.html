@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+<!-- header block -->
+{% block header %}
+<h4>{% block title %}Reply-Posts{% endblock %}</h4>
+{% endblock %}
+
+<!-- content block -->
+{% block content %}
+
+
+
+<center>
+    <div class="container mt-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h2 class="card-title">{{ mypost['title'] }}</h2>
+                <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                <h6 class="card-subtitle mb-2 text-muted">By {{post_author['firstname'] | title}} {{
+                    post_author['lastname'] |
+                    title}} on <br> {{ mypost['created'] }}</h6>
+                <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                <p class="card-text">{{ mypost['body'] }}</p>
+                <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+            </div>
+        </div>
+    </div>
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+</center>
+
+
+<div class="div container">
+    {% for reply in replies %}
+    <div class="card text-dark bg-light mb-3" style="max-width: 60rem;">
+
+        {% for user in users %}
+        {% if user['id'] == reply['author_id'] %}
+
+        <div class="card-header"><b>{{user['username']}}</b><i> at :
+                {{reply['created']}} </i></div>
+
+        <div class="card-body">
+            <p class="card-text">{{ reply['body'] }}
+                content.</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+
+
+
+</div>
+
+<hr style="height:2px;border-width:0;color:#808080;background-color:gray">
+
+<div class="div container">
+    <center>
+        <form method="POST" class="form-group">
+            {{ form.hidden_tag() }}
+
+
+            {{form.body.label}}
+            
+            {{form.body(class_="form-control" , style_="background-color:gray")}}
+            <hr style="height:2px;border-width:0;color:gray;background-color:#808080">
+
+            <center> {{form.reply(class_="btn btn-secondary")}} </center>
+            <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+
+        </form>
+    </center>
+
+</div>
+
+
+{% endblock %}

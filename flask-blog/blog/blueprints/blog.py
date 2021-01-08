@@ -27,15 +27,27 @@ def login_required(f):
     return check
 
 
+
 class PostForm(FlaskForm):
     title = StringField("Post Title: ", [validators.InputRequired()])
     body = TextAreaField("Post Body: ", [validators.InputRequired()])
     submit = SubmitField("Create Post")
 
+
+
+class ReplyPostForm(FlaskForm):
+    body = TextAreaField("Reply Body: ", [validators.InputRequired()])
+    reply = SubmitField("Reply")
+
+
+
 class EditPostForm(FlaskForm):
     new_title = StringField("Post Title: ", [validators.InputRequired()])
     new_body = TextAreaField("Post Body: ", [validators.InputRequired()])
-    submit = SubmitField("Edit Post")
+    submit = SubmitField("Edit")
+
+
+
 
 @blog_bp.route('/')
 @blog_bp.route('/posts')
@@ -96,7 +108,7 @@ def add_post():
             
             # commit changes to the database
             db.commit()
-            
+            flash('You were successfully Add')
             return redirect('/posts') 
 
         except sqlite3.Error as er:
@@ -119,15 +131,14 @@ def delete_post(id):
     db = get_db()
 
     
-    
-    delete=db.execute(f"DELETE FROM post WHERE id = '{id}' ")
+    # post_id = db.execute(f"SELECT id FROM post WHERE id = {id} ")
+    # print(type(post_id))
+    db.execute(f"DELETE FROM post WHERE id = {id} ")
     
     db.commit()
 
 
-    # render 'blog' blueprint with posts
-    return render_template('blog/display.html',  delete = delete)
-
+    return redirect('/profile')
 
 
 
@@ -167,3 +178,33 @@ def edit_post(id):
     
     # else, render the template
     return render_template("blog/edit_post.html", form = edit_post_form)
+
+
+@blog_bp.route('/post/reply/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def reply_post(id):
+    reply_form = ReplyPostForm()
+
+    if reply_form.validate_on_submit():
+        # read post values from the form
+        body = reply_form.body.data 
+
+    db = get_db()
+
+    # retrieve post
+    mypost = db.execute(f'''select * from post WHERE id = {id}''').fetchone()
+    
+    # retrieve first and last name from author post
+    author_id = mypost['author_id']
+    post_author = db.execute(f'''select * from user WHERE id = {author_id}''').fetchone()
+    
+
+    #retrieve replies 
+    replies = db.execute(f'''select * from reply WHERE post_id = {id}''').fetchall()
+
+    
+    users = db.execute("select * from user").fetchall()
+
+
+    #render the template
+    return render_template("blog/reply_post.html", mypost = mypost, post_author = post_author, form = reply_form, replies = replies, users = users)
