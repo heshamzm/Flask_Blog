@@ -4,6 +4,7 @@ import sqlite3
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField 
+from ..forms import User, Edit, Change_Password
 
 #obj/action/id
 
@@ -28,27 +29,7 @@ def login_required(f):
     return check
 
 
-class User(FlaskForm):
-    username = StringField("Username : ", [validators.InputRequired()])
-    password = PasswordField("Password : ", [validators.InputRequired()])
-    submit = SubmitField("Add User")
-    first_name = StringField("First name : ", [validators.InputRequired()])
-    last_name = StringField("Last name : ", [validators.InputRequired()])
-    biography = TextAreaField("Biography : ")
 
-
-class Edit(FlaskForm):
-    first_name = StringField("First name : ", [validators.InputRequired()])
-    last_name = StringField("Last name : ", [validators.InputRequired()])
-    biography = TextAreaField("Biography : ")
-    edit = SubmitField("Edit User")
-
-
-class Change_Password(FlaskForm):
-    old_password = PasswordField("Old Password : ", [validators.InputRequired()])
-    password = PasswordField('New Password', [validators.InputRequired(), validators.EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField("Confirm Password : ", [validators.InputRequired()])
-    submit = SubmitField("Change Password")
 
 
 

@@ -5,6 +5,7 @@ import datetime
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
+from ..forms import PostForm, ReplyPostForm, EditPostForm
 
 # define our blueprint
 blog_bp = Blueprint('blog', __name__)
@@ -28,23 +29,7 @@ def login_required(f):
 
 
 
-class PostForm(FlaskForm):
-    title = StringField("Post Title: ", [validators.InputRequired()])
-    body = TextAreaField("Post Body: ", [validators.InputRequired()])
-    submit = SubmitField("Create Post")
 
-
-
-class ReplyPostForm(FlaskForm):
-    body = TextAreaField("Reply Body: ", [validators.InputRequired()])
-    reply = SubmitField("Reply")
-
-
-
-class EditPostForm(FlaskForm):
-    new_title = StringField("Post Title: ", [validators.InputRequired()])
-    new_body = TextAreaField("Post Body: ", [validators.InputRequired()])
-    submit = SubmitField("Edit")
 
 
 
@@ -183,14 +168,30 @@ def edit_post(id):
 @blog_bp.route('/post/reply/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def reply_post(id):
+    db = get_db()
     reply_form = ReplyPostForm()
 
     if reply_form.validate_on_submit():
         # read post values from the form
         body = reply_form.body.data 
+        author_id = session['uid']
 
-    db = get_db()
+        
+        try:
+            # execute the SQL insert statement
+            db.execute("INSERT INTO reply (post_id,author_id,body) VALUES (?,?,?);", (id,author_id,body,))
+            
+            # commit changes to the database
+            db.commit()
+            return redirect(url_for('blog.reply_post', id = id))
 
+        except sqlite3.Error as er:
+            print(f"SQLite error: { (' '.join(er.args)) }")
+            return redirect("/404")
+
+        
+    # Display the reply section
+    
     # retrieve post
     mypost = db.execute(f'''select * from post WHERE id = {id}''').fetchone()
     
@@ -204,6 +205,7 @@ def reply_post(id):
 
     
     users = db.execute("select * from user").fetchall()
+
 
 
     #render the template

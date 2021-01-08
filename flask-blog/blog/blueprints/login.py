@@ -3,14 +3,12 @@ from blog.db import get_db
 import sqlite3
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, PasswordField
+from ..forms import LoginForm
 
 # define our blueprint
 login_bp = Blueprint('login', __name__)
 
-class LoginForm(FlaskForm):
-    username = StringField("Username : ", [validators.InputRequired()])
-    password = PasswordField("Password : ", [validators.InputRequired()])
-    submit = SubmitField("Log In")
+
 
 
 @login_bp.route('/login', methods =['POST','GET'])
