@@ -8,6 +8,24 @@
 <!-- content block -->
 {% block content %}
 
+
+<div class="div container">
+     
+  <form method="POST" class="form-group">
+    <div style="height: 20%;">  
+    {{ form.hidden_tag() }}
+
+      {{form.title.label}}
+      {{form.title(class_="form-control")}}
+      
+      {{form.body.label}}
+      {{form.body(class_="form-control")}}
+    </div>
+      <center>  {{form.submit(class_="btn btn-secondary")}}   </center>
+      <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+    
+  </form> </div>
+
 {% for post in posts %}
 <article class="post">
   <header>
@@ -19,7 +37,8 @@
     </div>
   </header>
   <p class="body">{{ post['body'] }}</p>
-  <a href="{{url_for('blog.reply_post',post_id = post['id'])}}"> Reply <i class="fas fa-reply"></i> </a>
+  <a href="{{url_for('blog.reply_post',post_id = post['id'] )}}"> <i class="fas fa-eye" title="Read More"> Read More  </i> </a> 
+  <i class="fas fa-heart mt-4 mx-2" title="Like"></i><i class="fas fa-heart-broken" title="DisLike"></i>
 </article>
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 

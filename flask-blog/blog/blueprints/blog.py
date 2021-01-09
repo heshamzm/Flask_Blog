@@ -5,7 +5,7 @@ import datetime
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
-from ..forms import PostForm, ReplyPostForm, EditPostForm
+from ..forms import PostForm, ReplyPostForm, EditPostForm , EditReplyForm , AddGeneralPostForm
 
 # define our blueprint
 blog_bp = Blueprint('blog', __name__)
@@ -28,41 +28,87 @@ def login_required(f):
     return check
 
 
-@blog_bp.route('/')
-@blog_bp.route('/posts')
+@blog_bp.route('/' , methods = ['GET', 'POST'])
+@blog_bp.route('/posts' , methods = ['GET', 'POST'])
 @login_required
 def index():
+    
+    add_post_form = AddGeneralPostForm()
+
+    if request.method == "GET":
+
+        # get the DB connection
+        db = get_db()
+
+        # retrieve all posts
+        posts = db.execute(
+            'SELECT p.id, title, body, created, author_id, firstname , lastname'
+            ' FROM post p JOIN user u ON p.author_id = u.id'
+            ' ORDER BY created DESC'
+        ).fetchall()
+
+        # render 'blog' blueprint with posts
+        # return render_template('blog/index.html', posts = posts )
+
+    else :
+        
+        if add_post_form.validate_on_submit():
+
+            # read post values from the form
+            title = add_post_form.title.data
+            body = add_post_form.body.data 
+
+            # read the 'uid' from the session for the current logged in user
+            author_id = session['uid']
+
+            # get the DB connection
+            db = get_db()
+            
+            # insert post into database
+            try:
+                # execute the SQL insert statement
+                db.execute("INSERT INTO post (author_id, title, body) VALUES (?, ?,?);", (author_id, title, body))
+                
+                # commit changes to the database
+                db.commit()
+                flash('You were successfully Add')
+                return redirect('/posts') 
+
+            except sqlite3.Error as er:
+                print(f"SQLite error: { (' '.join(er.args)) }")
+                return redirect("/404")
+
+        # if the user is not logged in, redirect to '/login' 
+        if "uid" not in session:
+            return redirect('/login')
+        
+        # else, render the template
+    return render_template("blog/index.html", form = add_post_form , posts = posts)
+
+
+
+
+@blog_bp.route('/myposts')
+@login_required
+def myposts():
+    
     # get the DB connection
     db = get_db()
 
     # retrieve all posts
-    posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, firstname , lastname'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-
+    posts = db.execute(f'''select * from post WHERE author_id = {session['uid']}''').fetchall()
+    
     # render 'blog' blueprint with posts
-    return render_template('blog/index.html', posts = posts)
+    return render_template('blog/myposts.html', posts = posts)
 
 
-@blog_bp.route('/posts/display/<int:id>')
-@login_required
-def display_myposts(id):
-        # get the DB connection
-    db = get_db()
-
-    # retrieve all posts
-    posts = db.execute(f'''select * from post WHERE author_id = {id}''').fetchall()
-    user = db.execute(f'''select * from user WHERE id = {id}''').fetchall()
-
-
-    # render 'blog' blueprint with posts
-    return render_template('blog/display.html', posts = posts , user=user)
+@blog_bp.route('/post/<int:post_id>')
+def view_post(post_id):
+    pass
 
 
 
-@blog_bp.route('/add/post', methods = ['GET', 'POST'])
+@blog_bp.route('/post/add', methods = ['GET', 'POST'])
 @login_required
 def add_post():
 
@@ -102,28 +148,24 @@ def add_post():
     return render_template("blog/add-post.html", form = post_form)
 
 
-@blog_bp.route('/post/delete/<int:id>', methods = ['GET', 'POST'])
+
+@blog_bp.route('/post/<int:post_id>/delete', methods = ['GET', 'POST'])
 @login_required
-def delete_post(id):
+def delete_post(post_id):
 
     # get the DB connection
     db = get_db()
 
-    
-    # post_id = db.execute(f"SELECT id FROM post WHERE id = {id} ")
-    # print(type(post_id))
-    db.execute(f"DELETE FROM post WHERE id = {id} ")
-    
+    db.execute(f"DELETE FROM post WHERE id = {post_id} ")
     db.commit()
 
-
-    return redirect('/profile')
-
+    return redirect(url_for("blog.myposts"))
 
 
-@blog_bp.route('/post/edit/<int:id>', methods = ['GET', 'POST'])
+
+@blog_bp.route('/post/<int:post_id>/edit', methods = ['GET', 'POST'])
 @login_required
-def edit_post(id):
+def edit_post(post_id):
 
     edit_post_form = EditPostForm() # 
 
@@ -140,12 +182,12 @@ def edit_post(id):
         
         try:
             
-            db.execute(f"UPDATE post SET title = '{new_title}', body = '{new_body}' WHERE id = '{id}' ")    
+            db.execute(f"UPDATE post SET title = '{new_title}', body = '{new_body}' WHERE id = '{post_id}' ")    
             
             # commit changes to the database
             db.commit()
             
-            return redirect('/posts') 
+            return redirect(url_for("blog.myposts")) 
 
         except sqlite3.Error as er:
             print(f"SQLite error: { (' '.join(er.args)) }")
@@ -160,7 +202,7 @@ def edit_post(id):
 
 
 
-@blog_bp.route('/post/reply/<int:post_id>', methods = ['GET', 'POST'])
+@blog_bp.route('/post/<int:post_id>/add_reply', methods = ['GET', 'POST'])
 @login_required
 def reply_post(post_id):
     db = get_db()
@@ -221,3 +263,83 @@ def delete_reply(post_id,reply_id):
 
 
     return redirect(url_for('blog.reply_post', post_id = post_id))
+
+
+
+@blog_bp.route('/post/<int:post_id>/edit_reply/<int:reply_id>', methods = ['GET', 'POST'])
+@login_required
+def edit_reply(post_id,reply_id):
+
+    edit_reply_form = EditReplyForm() # 
+
+    
+    if edit_reply_form.validate_on_submit():
+        # read post values from the form
+        new_body = edit_reply_form.new_body.data 
+
+
+        # get the DB connection
+        db = get_db()
+        
+        
+        try:
+            
+            db.execute(f"UPDATE reply SET body = '{new_body}' WHERE id = '{reply_id}' ")    
+            
+            # commit changes to the database
+            db.commit()
+            
+            return redirect(url_for("blog.reply_post" , post_id = post_id)) 
+
+        except sqlite3.Error as er:
+            print(f"SQLite error: { (' '.join(er.args)) }")
+            return redirect("/404")
+
+    # if the user is not logged in, redirect to '/login' 
+    if "uid" not in session:
+        return redirect('/login')
+    
+    # else, render the template
+    return render_template("blog/edit_reply.html", form = edit_reply_form)
+
+    
+
+# @blog_bp.route('/post/add', methods = ['GET', 'POST'])
+# @login_required
+# def add_general_post():
+
+
+#     add_post_form = AddGeneralPostForm()
+
+#     if add_post_form.validate_on_submit():
+#         # read post values from the form
+#         title = add_post_form.title.data
+#         body = add_post_form.body.data 
+
+#         # read the 'uid' from the session for the current logged in user
+#         author_id = session['uid']
+
+#         # get the DB connection
+#         db = get_db()
+        
+#         # insert post into database
+#         try:
+#             # execute the SQL insert statement
+#             db.execute("INSERT INTO post (author_id, title, body) VALUES (?, ?,?);", (author_id, title, body))
+            
+#             # commit changes to the database
+#             db.commit()
+#             flash('You were successfully Add')
+#             return redirect('/posts') 
+
+#         except sqlite3.Error as er:
+#             print(f"SQLite error: { (' '.join(er.args)) }")
+#             return redirect("/404")
+
+#     # if the user is not logged in, redirect to '/login' 
+#     if "uid" not in session:
+#         return redirect('/login')
+    
+#     # else, render the template
+#     return render_template("blog/index.html", form = add_post_form)
+

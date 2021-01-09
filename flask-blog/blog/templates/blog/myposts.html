@@ -20,8 +20,8 @@
       <hr style="height:2px;border-width:0;color:gray;background-color:gray">
       <p class="card-text">{{ post['body'] }}</p>
       <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-      <a href="{{url_for('blog.edit_post',id=post['id'])}}" class="card-link" title="Edit"><i class="far fa-edit"></i></a>
-      <a href="{{url_for('blog.delete_post',id=post['id'])}}" class="card-link" title="Delete"><i class="far fa-trash-alt"></i></a>
+      <a href="{{url_for('blog.edit_post',post_id=post['id'])}}" class="card-link" title="Edit"><i class="far fa-edit"></i></a>
+      <a href="{{url_for('blog.delete_post',post_id=post['id'])}}" class="card-link" title="Delete"><i class="far fa-trash-alt"></i></a>
     </div>
   </div>
 </div>

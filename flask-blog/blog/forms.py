@@ -9,6 +9,11 @@ class PostForm(FlaskForm):
     submit = SubmitField("Create Post")
 
 
+class AddGeneralPostForm(FlaskForm):
+    title = StringField("Post Title: ", [validators.InputRequired()] , render_kw = {"placeholder" : "Enter Post Title"})
+    body = TextAreaField("Post Body: ", [validators.InputRequired()], render_kw = {"placeholder" : "Enter Your Bloger..."})
+    submit = SubmitField("Create Post")
+
 
 class ReplyPostForm(FlaskForm):
     body = TextAreaField("Reply Body: ", [validators.InputRequired()])
@@ -21,10 +26,14 @@ class EditPostForm(FlaskForm):
     new_body = TextAreaField("Post Body: ", [validators.InputRequired()])
     submit = SubmitField("Edit")
 
+
+
 class LoginForm(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
     password = PasswordField("Password : ", [validators.InputRequired()])
     submit = SubmitField("Log In")
+
+
 
 class User(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
@@ -35,6 +44,7 @@ class User(FlaskForm):
     biography = TextAreaField("Biography : ")
 
 
+
 class Edit(FlaskForm):
     first_name = StringField("First name : ", [validators.InputRequired()])
     last_name = StringField("Last name : ", [validators.InputRequired()])
@@ -42,8 +52,16 @@ class Edit(FlaskForm):
     edit = SubmitField("Edit User")
 
 
+
 class Change_Password(FlaskForm):
     old_password = PasswordField("Old Password : ", [validators.InputRequired()])
     password = PasswordField('New Password', [validators.InputRequired(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField("Confirm Password : ", [validators.InputRequired()])
     submit = SubmitField("Change Password")
+
+
+
+class EditReplyForm(FlaskForm):
+    new_body = TextAreaField("Reply Body: ", [validators.InputRequired()])
+    reply = SubmitField("Edit")
+
