@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS "post" (
 	"title"	TEXT NOT NULL,
 	"body"	TEXT NOT NULL,
 	FOREIGN KEY("author_id") REFERENCES "user"("id"),
+	FOREIGN KEY("author_id") REFERENCES "user"("id"),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 DROP TABLE IF EXISTS "user";
@@ -47,6 +48,8 @@ INSERT INTO "user" VALUES (5,'reema_95','1234','reema','eilouti','knitter');
 
 INSERT INTO "reply" VALUES (1,1,2,'2019-12-30 14:09:01','Cool, I liked it');
 INSERT INTO "reply" VALUES (2,1,1,'2019-12-30 15:09:01','Thanks, Man !!');
+INSERT INTO "reply" VALUES (3,1,1,'2019-12-30 15:09:01','contact me man !!');
+INSERT INTO "reply" VALUES (4,1,1,'2019-12-30 15:09:01','Lool !!');
 
 COMMIT;
 

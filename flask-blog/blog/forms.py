@@ -21,10 +21,14 @@ class EditPostForm(FlaskForm):
     new_body = TextAreaField("Post Body: ", [validators.InputRequired()])
     submit = SubmitField("Edit")
 
+
+
 class LoginForm(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
     password = PasswordField("Password : ", [validators.InputRequired()])
     submit = SubmitField("Log In")
+
+
 
 class User(FlaskForm):
     username = StringField("Username : ", [validators.InputRequired()])
@@ -35,6 +39,7 @@ class User(FlaskForm):
     biography = TextAreaField("Biography : ")
 
 
+
 class Edit(FlaskForm):
     first_name = StringField("First name : ", [validators.InputRequired()])
     last_name = StringField("Last name : ", [validators.InputRequired()])
@@ -42,8 +47,16 @@ class Edit(FlaskForm):
     edit = SubmitField("Edit User")
 
 
+
 class Change_Password(FlaskForm):
     old_password = PasswordField("Old Password : ", [validators.InputRequired()])
     password = PasswordField('New Password', [validators.InputRequired(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField("Confirm Password : ", [validators.InputRequired()])
     submit = SubmitField("Change Password")
+
+
+
+class Edit_Reply(FlaskForm):
+    new_body = TextAreaField("Edit Reply Body: ", [validators.InputRequired()])
+    reply = SubmitField("Edit")
+    

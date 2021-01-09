@@ -5,7 +5,7 @@ import datetime
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
-from ..forms import PostForm, ReplyPostForm, EditPostForm
+from ..forms import PostForm, ReplyPostForm, EditPostForm , Edit_Reply
 
 # define our blueprint
 blog_bp = Blueprint('blog', __name__)
@@ -26,11 +26,6 @@ def login_required(f):
             # , next=request.url )
             
     return check
-
-
-
-
-
 
 
 
@@ -116,8 +111,6 @@ def delete_post(id):
     db = get_db()
 
     
-    # post_id = db.execute(f"SELECT id FROM post WHERE id = {id} ")
-    # print(type(post_id))
     db.execute(f"DELETE FROM post WHERE id = {id} ")
     
     db.commit()
@@ -210,3 +203,54 @@ def reply_post(id):
 
     #render the template
     return render_template("blog/reply_post.html", mypost = mypost, post_author = post_author, form = reply_form, replies = replies, users = users)
+
+
+
+@blog_bp.route('/reply/delete/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def delete_reply_post(id):
+
+    # get the DB connection
+    db = get_db()
+
+    
+    db.execute(f"DELETE FROM reply WHERE id = {id} ")
+    db.commit()
+
+    return redirect('/posts')
+
+
+
+@blog_bp.route('/reply/edit/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def reply_edit_post(id):
+
+    edit_reply_post_form = Edit_Reply() # 
+
+    
+    if edit_reply_post_form.validate_on_submit():
+        # read post values from the form
+        new_body = edit_reply_post_form.new_body.data 
+
+
+        # get the DB connection
+        db = get_db()
+        
+        
+        try:
+            
+            db.execute(f"UPDATE reply SET body = '{new_body}' WHERE id = {id} ")    
+            
+            # commit changes to the database
+            db.commit()
+            
+            return redirect('/posts') 
+
+        except sqlite3.Error as er:
+            print(f"SQLite error: { (' '.join(er.args)) }")
+            return redirect("/404")
+
+
+    
+    # else, render the template
+    return render_template("blog/edit_reply.html", form = edit_reply_post_form)
