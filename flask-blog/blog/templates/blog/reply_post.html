@@ -18,7 +18,7 @@
                 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                 <h6 class="card-subtitle mb-2 text-muted">By {{post_author['firstname'] | title}} {{
                     post_author['lastname'] |
-                    title}} on <br> {{ mypost['created'] }}</h6>
+                    title}} on <br> {{ mypost['created'] }}</h6>                    
                 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                 <p class="card-text">{{ mypost['body'] }}</p>
                 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
@@ -39,10 +39,14 @@
         {% if user['id'] == reply['author_id'] %}
 
         <div class="card-header"><b>{{user['username']}}</b><i> at :
-                {{reply['created']}} </i></div>
+                {{reply['created']}} </i>   
+        </div>
 
         <div class="card-body">
             <p class="card-text">{{ reply['body'] }}</p>
+            <hr style="height:2px;border-width:0;color:gray;background-color:#808080">
+            <a href="#" class="card-link" title="Edit"><i class="far fa-edit"></i></a>
+            <a href="{{url_for('blog.delete_reply',post_id = mypost['id'], reply_id = reply['id'])}}" class="card-link" title="Delete"><i class="far fa-trash-alt"></i></a>
         </div>
         {% endif %}
         {% endfor %}

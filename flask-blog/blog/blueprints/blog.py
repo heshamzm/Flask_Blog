@@ -160,9 +160,9 @@ def edit_post(id):
 
 
 
-@blog_bp.route('/post/reply/<int:id>', methods = ['GET', 'POST'])
+@blog_bp.route('/post/reply/<int:post_id>', methods = ['GET', 'POST'])
 @login_required
-def reply_post(id):
+def reply_post(post_id):
     db = get_db()
     reply_form = ReplyPostForm()
 
@@ -174,11 +174,11 @@ def reply_post(id):
         
         try:
             # execute the SQL insert statement
-            db.execute("INSERT INTO reply (post_id,author_id,body) VALUES (?,?,?);", (id,author_id,body,))
+            db.execute("INSERT INTO reply (post_id,author_id,body) VALUES (?,?,?);", (post_id,author_id,body,))
             
             # commit changes to the database
             db.commit()
-            return redirect(url_for('blog.reply_post', id = id))
+            return redirect(url_for('blog.reply_post', post_id = post_id))
 
         except sqlite3.Error as er:
             print(f"SQLite error: { (' '.join(er.args)) }")
@@ -188,7 +188,7 @@ def reply_post(id):
     # Display the reply section
     
     # retrieve post
-    mypost = db.execute(f'''select * from post WHERE id = {id}''').fetchone()
+    mypost = db.execute(f'''select * from post WHERE id = {post_id}''').fetchone()
     
     # retrieve first and last name from author post
     author_id = mypost['author_id']
@@ -196,7 +196,7 @@ def reply_post(id):
     
 
     #retrieve replies 
-    replies = db.execute(f'''select * from reply WHERE post_id = {id}''').fetchall()
+    replies = db.execute(f'''select * from reply WHERE post_id = {post_id}''').fetchall()
 
     
     users = db.execute("select * from user").fetchall()
@@ -205,3 +205,19 @@ def reply_post(id):
 
     #render the template
     return render_template("blog/reply_post.html", mypost = mypost, post_author = post_author, form = reply_form, replies = replies, users = users)
+
+
+
+@blog_bp.route('/post/<int:post_id>/delete_reply/<int:reply_id>', methods = ['GET', 'POST'])
+@login_required
+def delete_reply(post_id,reply_id):
+
+    # get the DB connection
+    db = get_db()
+        
+    # delete from DB
+    db.execute(f"DELETE FROM reply WHERE id = {reply_id} ")
+    db.commit()
+
+
+    return redirect(url_for('blog.reply_post', post_id = post_id))
