@@ -28,12 +28,6 @@ def login_required(f):
     return check
 
 
-
-
-
-
-
-
 @blog_bp.route('/')
 @blog_bp.route('/posts')
 @login_required
@@ -163,6 +157,7 @@ def edit_post(id):
     
     # else, render the template
     return render_template("blog/edit_post.html", form = edit_post_form)
+
 
 
 @blog_bp.route('/post/reply/<int:id>', methods = ['GET', 'POST'])
