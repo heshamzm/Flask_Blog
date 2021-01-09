@@ -8,7 +8,7 @@
 <!-- content block -->
 {% block content %}
 
-  
+
 
 <center>
     <div class="container mt-4">
@@ -22,8 +22,6 @@
                 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                 <p class="card-text">{{ mypost['body'] }}</p>
                 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-
-
 
             </div>
         </div>
@@ -45,17 +43,7 @@
 
         <div class="card-body">
             <p class="card-text">{{ reply['body'] }}</p>
-
-            <hr style="height:2px;border-width:0;color:#808080;background-color:gray">
-
-            {#
-            <!-- <a href="{{url_for('blog.reply_edit_post',id=reply['author_id'])}}" class="card-link" title="Edit"><i class="far fa-edit"></i></a>
-            <a href="{{url_for('blog.delete_reply_post',id=reply['author_id'])}}" class="card-link" title="Delete"><i class="far fa-trash-alt"></i></a> -->
-        #}
         </div>
-
-
-
         {% endif %}
         {% endfor %}
     </div>
@@ -75,7 +63,7 @@
 
 
             {{form.body.label}}
-
+            
             {{form.body(class_="form-control" , style_="background-color:gray")}}
             <hr style="height:2px;border-width:0;color:gray;background-color:#808080">
 

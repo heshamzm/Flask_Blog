@@ -12,25 +12,24 @@
   {{message}}
 </div>
 {% endif %}
-<div class="div container">
-<form method="POST" action="" class="form-group">
+<form method="POST" action="">
   <center>
     {{ form.hidden_tag() }}
     <!-- <input type="hidden" name="next_url" value="{{request.args.get('next' , '')}}"> -->
 
     <div class="col-md-6 mb-3">
       {{form.username.label}}
-      {{form.username(class_="form-control")}}
+      {{form.username()}}
     </div>
 
     <div class="col-md-6 mb-3">
       {{form.password.label}}
-      {{form.password(class_="form-control")}}
+      {{form.password()}}
     </div>
 
     <hr class="mb-4" />
-    <center>  {{form.submit(class_="btn btn-secondary")}}   </center>
+    {{form.submit()}}
+
 </form>
-</div>
 </center>
 {% endblock %}
