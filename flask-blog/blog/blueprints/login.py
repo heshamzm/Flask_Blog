@@ -9,8 +9,6 @@ from ..forms import LoginForm
 login_bp = Blueprint('login', __name__)
 
 
-
-
 @login_bp.route('/login', methods =['POST','GET'])
 def login():
     login = LoginForm()
@@ -48,11 +46,6 @@ def login():
         # render the login template
     return render_template('login/login.html', form = login)
     
-        
-
-# @login_bp.route('/session')
-# def show_session():
-#     return dict(session)
 
 @login_bp.route('/logout')
 def logout():

@@ -5,7 +5,7 @@ import datetime
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, TextAreaField
-from ..forms import PostForm, ReplyPostForm, EditPostForm , EditReplyForm , AddGeneralPostForm
+from ..forms import PostForm, ReplyPostForm, EditPostForm , EditReplyForm
 
 # define our blueprint
 blog_bp = Blueprint('blog', __name__)
@@ -33,7 +33,7 @@ def login_required(f):
 @login_required
 def index():
     
-    add_post_form = AddGeneralPostForm()
+    add_post_form = PostForm()
 
     if request.method == "GET":
 
@@ -167,7 +167,16 @@ def delete_post(post_id):
 @login_required
 def edit_post(post_id):
 
-    edit_post_form = EditPostForm() # 
+    edit_post_form = EditPostForm() 
+
+    if request.method == "GET":
+
+        db = get_db()
+
+        current_post = db.execute(f"select * from post WHERE id = {post_id}").fetchone()
+
+        edit_post_form.new_title.data = current_post['title']
+        edit_post_form.new_body.data = current_post['body']
 
     
     if edit_post_form.validate_on_submit():
@@ -209,6 +218,7 @@ def reply_post(post_id):
     reply_form = ReplyPostForm()
 
     if reply_form.validate_on_submit():
+
         # read post values from the form
         body = reply_form.body.data 
         author_id = session['uid']
@@ -230,7 +240,7 @@ def reply_post(post_id):
     # Display the reply section
     
     # retrieve post
-    mypost = db.execute(f'''select * from post WHERE id = {post_id}''').fetchone()
+    mypost = db.execute(f"select * from post WHERE id = {post_id}").fetchone()
     
     # retrieve first and last name from author post
     author_id = mypost['author_id']
@@ -270,7 +280,15 @@ def delete_reply(post_id,reply_id):
 @login_required
 def edit_reply(post_id,reply_id):
 
-    edit_reply_form = EditReplyForm() # 
+    edit_reply_form = EditReplyForm() 
+
+    if request.method == "GET":
+
+        db = get_db()
+
+        current_reply = db.execute(f"select * from reply WHERE id = {reply_id}").fetchone()
+
+        edit_reply_form.new_body.data = current_reply['body']
 
     
     if edit_reply_form.validate_on_submit():
@@ -301,45 +319,3 @@ def edit_reply(post_id,reply_id):
     
     # else, render the template
     return render_template("blog/edit_reply.html", form = edit_reply_form)
-
-    
-
-# @blog_bp.route('/post/add', methods = ['GET', 'POST'])
-# @login_required
-# def add_general_post():
-
-
-#     add_post_form = AddGeneralPostForm()
-
-#     if add_post_form.validate_on_submit():
-#         # read post values from the form
-#         title = add_post_form.title.data
-#         body = add_post_form.body.data 
-
-#         # read the 'uid' from the session for the current logged in user
-#         author_id = session['uid']
-
-#         # get the DB connection
-#         db = get_db()
-        
-#         # insert post into database
-#         try:
-#             # execute the SQL insert statement
-#             db.execute("INSERT INTO post (author_id, title, body) VALUES (?, ?,?);", (author_id, title, body))
-            
-#             # commit changes to the database
-#             db.commit()
-#             flash('You were successfully Add')
-#             return redirect('/posts') 
-
-#         except sqlite3.Error as er:
-#             print(f"SQLite error: { (' '.join(er.args)) }")
-#             return redirect("/404")
-
-#     # if the user is not logged in, redirect to '/login' 
-#     if "uid" not in session:
-#         return redirect('/login')
-    
-#     # else, render the template
-#     return render_template("blog/index.html", form = add_post_form)
-

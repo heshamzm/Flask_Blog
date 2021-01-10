@@ -4,7 +4,7 @@ import sqlite3
 from functools import wraps
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators, PasswordField, TextAreaField 
-from ..forms import User, Edit, Change_Password
+from ..forms import AddUserForm, EditUserInfoForm, ChangePasswordForm
 
 #obj/action/id
 
@@ -36,7 +36,7 @@ def login_required(f):
 @user_bp.route('/change_password' , methods=['POST' , 'GET'])
 @login_required
 def change_password():
-    change_form = Change_Password()
+    change_form = ChangePasswordForm()
     
     if change_form.validate_on_submit():
         oldpassword = change_form.old_password.data
@@ -85,7 +85,7 @@ def show_session():
 @login_required
 def add_user():
 
-    user = User()
+    user = AddUserForm()
 
     if user.validate_on_submit():
     
@@ -142,13 +142,15 @@ def edit_user():
 
     current_user = session['uid']
 
-    edit_form = Edit() # 
+    edit_form = EditUserInfoForm() 
+    
     if request.method == "GET":
+
     #set values in the form
-        edit_form.first_name.data=session['firstname']
-        edit_form.last_name.data=session['lastname']
-        edit_form.biography.data=session['biography']
-        print(edit_form.first_name)
+        edit_form.first_name.data = session['firstname']
+        edit_form.last_name.data = session['lastname']
+        edit_form.biography.data = session['biography']
+        
 
     
 
