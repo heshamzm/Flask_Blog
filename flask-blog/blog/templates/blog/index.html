@@ -37,14 +37,15 @@
   <header>
     <div>
       <h1>{{ post['title'] }}</h1>
-      <d iv class="about">
+      <div class="about">
         By {{ post['firstname'] }} {{ post['lastname'] }} on {{ post['created'] }}
     </div>
     </div>
   </header>
   <p class="body">{{ post['body'] }}</p>
-  <a href="{{url_for('blog.reply_post', post_id = post['id'] )}}"><i class="fas fa-eye" title="Read More">Read More</i></a> 
-  <i class="fas fa-heart mt-4 mx-2" title="Like"></i><i class="fas fa-heart-broken" title="DisLike"></i>
+  <a href="{{url_for('blog.reply_post', post_id = post['id'] )}}"><i class="fas fa-reply mx-1"></i>Reply</a> 
+  <a href="{{url_for('blog.like', post_id = post['id'] )}}"><i class="fas fa-heart mt-4 mx-1" title="Like"></i></a>{{ post['likes'] }}
+  <a href="{{url_for('blog.dislike', post_id = post['id'] )}}"><i class="fas fa-heart-broken mx-1" title="DisLike"></i></a>{{ post['dislikes'] }}
 </article>
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 

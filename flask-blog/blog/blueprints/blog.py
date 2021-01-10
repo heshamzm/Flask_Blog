@@ -42,7 +42,7 @@ def index():
 
         # retrieve all posts
         posts = db.execute(
-            'SELECT p.id, title, body, created, author_id, firstname , lastname'
+            'SELECT p.id, title, body, created, author_id, firstname , lastname, likes, dislikes'
             ' FROM post p JOIN user u ON p.author_id = u.id'
             ' ORDER BY created DESC'
         ).fetchall()
@@ -319,3 +319,96 @@ def edit_reply(post_id,reply_id):
     
     # else, render the template
     return render_template("blog/edit_reply.html", form = edit_reply_form)
+
+
+@blog_bp.route("/post/<int:post_id>/like")
+@login_required
+def like(post_id):
+    db = get_db()
+
+    num_of_likes = db.execute("SELECT likes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
+
+    total_likes = num_of_likes['likes']
+
+
+
+    num_of_dislikes = db.execute("SELECT dislikes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
+
+    total_dislikes = num_of_dislikes['dislikes']
+
+
+
+    reaction_id = db.execute(f"SELECT id FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
+
+    if reaction_id == None:
+
+        db = get_db()
+
+        total_likes += 1
+
+        db.execute(f"UPDATE post SET likes = {total_likes} WHERE id = {post_id}")
+
+        db.execute(f"INSERT INTO reaction (post_id, user_id, like, dislike) VALUES (?, ?, ?, ?);", (post_id, session['uid'], 1, 0))
+
+        db.commit()
+
+        return redirect(url_for("blog.index")) 
+
+    else:
+
+        db.execute(f"UPDATE reaction SET like = '{1}', dislike = '{0}' WHERE id = '{reaction_id['id']}'")
+
+        db.execute(f"UPDATE post SET likes = {total_likes +1}, dislike = {total_dislikes -1} WHERE id = {post_id}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))  
+
+
+
+@blog_bp.route("/post/<int:post_id>/dislike")
+@login_required
+def dislike(post_id):
+
+    db = get_db()
+
+    num_of_likes = db.execute("SELECT likes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
+
+    total_likes = num_of_likes['likes']
+
+
+
+    num_of_dislikes = db.execute("SELECT dislikes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
+
+    total_dislikes = num_of_dislikes['dislikes']
+
+
+
+    reaction_id = db.execute(f"SELECT id FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
+
+
+
+    if reaction_id == None:
+
+        db = get_db()
+
+        total_dislikes += 1
+
+        db.execute(f"UPDATE post SET dislikes = {total_dislikes} WHERE id = {post_id}")
+
+        db.execute(f"INSERT INTO reaction (post_id, user_id, like, dislike) VALUES (?, ?, ?, ?);", (post_id, session['uid'], 0, 1))
+
+        db.commit()
+
+        return redirect(url_for("blog.index")) 
+
+    else:
+
+
+        db.execute(f"UPDATE reaction SET like = '{0}', dislike = '{1}' WHERE id = '{reaction_id['id']}'")
+
+        db.execute(f"UPDATE post SET likes = {total_likes -1}, dislikes = {total_dislikes +1} WHERE id = {post_id}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))    

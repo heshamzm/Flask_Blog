@@ -126,9 +126,6 @@ def profile():
     user = db.execute('SELECT * FROM user WHERE id LIKE ?',(current_user,)).fetchone()
     posts = db.execute('SELECT * FROM post WHERE author_id LIKE ? ORDER BY created DESC',(current_user,)).fetchall()
 
-    
-    # for i in range(len(posts)):        
-    #     i = i + 1  
         
     flash('You were successfully logged in')
 
