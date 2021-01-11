@@ -327,16 +327,11 @@ def like(post_id):
     db = get_db()
 
     num_of_likes = db.execute("SELECT likes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
-
     total_likes = num_of_likes['likes']
 
 
-
     num_of_dislikes = db.execute("SELECT dislikes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
-
     total_dislikes = num_of_dislikes['dislikes']
-
-
 
     reaction_id = db.execute(f"SELECT id FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
 
@@ -358,7 +353,7 @@ def like(post_id):
 
         db.execute(f"UPDATE reaction SET like = '{1}', dislike = '{0}' WHERE id = '{reaction_id['id']}'")
 
-        db.execute(f"UPDATE post SET likes = {total_likes +1}, dislike = {total_dislikes -1} WHERE id = {post_id}")
+        db.execute(f"UPDATE post SET likes = '{total_likes}', dislikes = '{total_dislikes}' WHERE id = {post_id}")
 
         db.commit()
 
@@ -373,9 +368,7 @@ def dislike(post_id):
     db = get_db()
 
     num_of_likes = db.execute("SELECT likes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
-
     total_likes = num_of_likes['likes']
-
 
 
     num_of_dislikes = db.execute("SELECT dislikes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
@@ -407,7 +400,8 @@ def dislike(post_id):
 
         db.execute(f"UPDATE reaction SET like = '{0}', dislike = '{1}' WHERE id = '{reaction_id['id']}'")
 
-        db.execute(f"UPDATE post SET likes = {total_likes -1}, dislikes = {total_dislikes +1} WHERE id = {post_id}")
+
+        db.execute(f"UPDATE post SET likes = '{total_likes}', dislikes = '{total_dislikes}' WHERE id = {post_id}")
 
         db.commit()
 

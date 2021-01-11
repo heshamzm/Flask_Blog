@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "post" (
 	"created"	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"title"	TEXT NOT NULL,
 	"body"	TEXT NOT NULL,
-	"likes" INTEGER,
+	"likes" INTEGER ,
 	"dislikes" INTEGER,
 	FOREIGN KEY("author_id") REFERENCES "user"("id"),
 	PRIMARY KEY("id" AUTOINCREMENT)
