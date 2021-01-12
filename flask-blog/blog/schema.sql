@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS "reaction" (
 	"user_id"	INTEGER NOT NULL,
 	"like" INTEGER,
 	"dislike" INTEGER,
+	"favorite" INTEGER,
 	FOREIGN KEY("post_id") REFERENCES "post"("id"),
 	FOREIGN KEY("user_id") REFERENCES "user"("id"),
 	PRIMARY KEY("id" AUTOINCREMENT)

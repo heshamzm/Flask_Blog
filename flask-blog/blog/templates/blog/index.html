@@ -37,13 +37,13 @@
 <article class="post">
   <header>
     <div>
-      
-        <h1>{{ post['title'] }}</h1>
-        {% if session['role'] == 1 or session['role'] == 2 %}
-        <a style="margin-left: 90%;" href="{{url_for('blog.edit_post',post_id=post['id'])}}" title="Edit"><i
-            class="far fa-edit"></i></a>
-        {% endif %}
-      
+
+      <h1>{{ post['title'] }}</h1>
+      {% if session['role'] == 1 or session['role'] == 2 %}
+      <a style="margin-left: 90%;" href="{{url_for('blog.edit_post',post_id=post['id'])}}" title="Edit"><i
+          class="far fa-edit"></i></a>
+      {% endif %}
+
 
       <div class="about">
         By {{ post['firstname'] }} {{ post['lastname'] }} on {{ post['created'] }}
@@ -56,6 +56,7 @@
   post['likes'] }}
   <a href="{{url_for('blog.dislike', post_id = post['id'] )}}"><i class="fas fa-heart-broken mx-1"
       title="DisLike"></i></a>{{ post['dislikes'] }}
+  <a href="{{url_for('blog.favorite', post_id = post['id'] )}}"><i class="fas fa-star" title="Favorite"></i></a>
 </article>
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 

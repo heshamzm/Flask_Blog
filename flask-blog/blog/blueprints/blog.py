@@ -421,4 +421,12 @@ def dislike(post_id):
 
         return redirect(url_for("blog.index"))
         
-            
+@blog_bp.route("/post/<int:post_id>/favorite")
+@login_required            
+def favorite(post_id):
+
+    db = get_db()
+
+    db.execute(f"INSERT INTO reaction f WHERE post_id = {post_id} AND user_id = {session['uid']}")
+
+    return redirect(url_for("blog.index"))
