@@ -86,8 +86,6 @@ def index():
     return render_template("blog/index.html", form = add_post_form , posts = posts)
 
 
-
-
 @blog_bp.route('/myposts')
 @login_required
 def myposts():
@@ -105,7 +103,6 @@ def myposts():
 @blog_bp.route('/post/<int:post_id>')
 def view_post(post_id):
     pass
-
 
 
 @blog_bp.route('/post/add', methods = ['GET', 'POST'])
@@ -148,7 +145,6 @@ def add_post():
     return render_template("blog/add-post.html", form = post_form)
 
 
-
 @blog_bp.route('/post/<int:post_id>/delete', methods = ['GET', 'POST'])
 @login_required
 def delete_post(post_id):
@@ -160,7 +156,6 @@ def delete_post(post_id):
     db.commit()
 
     return redirect(url_for("blog.myposts"))
-
 
 
 @blog_bp.route('/post/<int:post_id>/edit', methods = ['GET', 'POST'])
@@ -208,7 +203,6 @@ def edit_post(post_id):
     
     # else, render the template
     return render_template("blog/edit_post.html", form = edit_post_form)
-
 
 
 @blog_bp.route('/post/<int:post_id>/add_reply', methods = ['GET', 'POST'])
@@ -259,7 +253,6 @@ def reply_post(post_id):
     return render_template("blog/reply_post.html", mypost = mypost, post_author = post_author, form = reply_form, replies = replies, users = users)
 
 
-
 @blog_bp.route('/post/<int:post_id>/delete_reply/<int:reply_id>', methods = ['GET', 'POST'])
 @login_required
 def delete_reply(post_id,reply_id):
@@ -273,7 +266,6 @@ def delete_reply(post_id,reply_id):
 
 
     return redirect(url_for('blog.reply_post', post_id = post_id))
-
 
 
 @blog_bp.route('/post/<int:post_id>/edit_reply/<int:reply_id>', methods = ['GET', 'POST'])
@@ -333,7 +325,7 @@ def like(post_id):
     num_of_dislikes = db.execute("SELECT dislikes FROM post WHERE id LIKE ?",(post_id,)).fetchone()
     total_dislikes = num_of_dislikes['dislikes']
 
-    reaction_id = db.execute(f"SELECT id FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
+    reaction_id = db.execute(f"SELECT * FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
 
     if reaction_id == None:
 
@@ -349,7 +341,8 @@ def like(post_id):
 
         return redirect(url_for("blog.index")) 
 
-    else:
+    elif reaction_id['like'] == 1:
+
 
         db.execute(f"UPDATE reaction SET like = '{1}', dislike = '{0}' WHERE id = '{reaction_id['id']}'")
 
@@ -357,7 +350,18 @@ def like(post_id):
 
         db.commit()
 
-        return redirect(url_for("blog.index"))  
+        return redirect(url_for("blog.index")) 
+
+
+    elif reaction_id['dislike'] == 1 :
+
+        db.execute(f"UPDATE reaction SET like = '{1}', dislike = '{0}' WHERE id = '{reaction_id['id']}'")
+
+        db.execute(f"UPDATE post SET likes = '{total_likes + 1}', dislikes = '{total_dislikes - 1}' WHERE id = {post_id}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))
 
 
 
@@ -377,7 +381,7 @@ def dislike(post_id):
 
 
 
-    reaction_id = db.execute(f"SELECT id FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
+    reaction_id = db.execute(f"SELECT * FROM reaction WHERE user_id = {session['uid']} AND post_id = {post_id}").fetchone()
 
 
 
@@ -395,7 +399,7 @@ def dislike(post_id):
 
         return redirect(url_for("blog.index")) 
 
-    else:
+    elif reaction_id['dislike'] == 1 :
 
 
         db.execute(f"UPDATE reaction SET like = '{0}', dislike = '{1}' WHERE id = '{reaction_id['id']}'")
@@ -406,3 +410,19 @@ def dislike(post_id):
         db.commit()
 
         return redirect(url_for("blog.index"))    
+
+
+    elif reaction_id['like'] == 1 :  
+
+
+
+        db.execute(f"UPDATE reaction SET like = '{0}', dislike = '{1}' WHERE id = '{reaction_id['id']}'")
+
+
+        db.execute(f"UPDATE post SET likes = '{total_likes - 1}', dislikes = '{total_dislikes + 1}' WHERE id = {post_id}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))
+        
+            
