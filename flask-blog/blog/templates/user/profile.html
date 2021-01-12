@@ -58,13 +58,11 @@
     </a>
 
     <a href="/post/add" class="btn btn-secondary "  type="button" role="button"> Add Post </a>
-
+    {% if session['role'] == 2 %}
     <a href="/add/user" class="btn btn-secondary " type="button" role="button"> Add User </a>
-
-    <a href="/" class="btn btn-secondary " target="_blank" type="button" role="button"> Display All Posts </a>
-
+    
     <a href="/users" class="btn btn-secondary " target="_blank" type="button" role="button"> Display All Users </a>
-
+    {% endif %}
 
   </center>
 </div>

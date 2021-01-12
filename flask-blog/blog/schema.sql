@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"firstname"	TEXT,
 	"lastname"	TEXT,
 	"biography"	TEXT,
+	"role" INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
@@ -54,11 +55,14 @@ INSERT INTO "post" VALUES (5,1,'2020-12-30 14:09:01','Flask','Welcome to Flaskâ€
 INSERT INTO "post" VALUES (3,3,'2020-12-30 14:09:01','Post 3','Morbi sed iaculis dolor. Fusce at eros orci. Mauris eget pellentesque odio. Aenean interdum lectus libero, suscipit lacinia turpis lobortis et.',0,0);
 INSERT INTO "post" VALUES (4,2,'2020-12-30 14:09:01','My Post','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pulvinar sapien sit amet nunc mollis, ut sagittis nunc venenatis. Maecenas finibus orci sit amet nisl tempus, at suscipit diam condimentum.',0,0);
 
-INSERT INTO "user" VALUES (1,'hesham_94','1234','hesham','marei','programmer');
-INSERT INTO "user" VALUES (2,'ahmad_000','1234','ahmad','saber','player');
-INSERT INTO "user" VALUES (3,'Mohammad@','1234','mohammad','mahmmoud','lawyer');
-INSERT INTO "user" VALUES (4,'hamza','1234','hamza','rdaideh','programmer');
-INSERT INTO "user" VALUES (5,'reema_95','1234','reema','eilouti','knitter');
+INSERT INTO "user" VALUES (1,'hesham_94','1234','hesham','marei','programmer',0);
+INSERT INTO "user" VALUES (2,'ahmad_000','1234','ahmad','saber','player',0);
+INSERT INTO "user" VALUES (3,'Mohammad@','1234','mohammad','mahmmoud','lawyer',0);
+INSERT INTO "user" VALUES (4,'hamza','1234','hamza','rdaideh','programmer',0);
+INSERT INTO "user" VALUES (5,'reema_95','1234','reema','eilouti','knitter',0);
+INSERT INTO "user" VALUES (6,'admin','1234','admin','admin','admin',2);
+INSERT INTO "user" VALUES (7,'editor1','1234','editor1','editor1','editor1',1);
+INSERT INTO "user" VALUES (8,'editor2','1234','editor2','editor2','editor2',1);
 
 INSERT INTO "reply" VALUES (1,1,2,'2019-12-30 14:09:01','Cool, I liked it');
 INSERT INTO "reply" VALUES (2,1,1,'2019-12-30 15:09:01','Thanks, Man !!');

@@ -100,10 +100,6 @@ def myposts():
     return render_template('blog/myposts.html', posts = posts)
 
 
-@blog_bp.route('/post/<int:post_id>')
-def view_post(post_id):
-    pass
-
 
 @blog_bp.route('/post/add', methods = ['GET', 'POST'])
 @login_required

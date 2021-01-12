@@ -37,6 +37,7 @@ def login():
                     session['firstname'] = user['firstname']
                     session['lastname'] = user['lastname']
                     session['biography'] = user['biography']
+                    session['role'] = user['role']
                     
             return redirect("/profile")
 
