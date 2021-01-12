@@ -337,7 +337,23 @@ def like(post_id):
 
         return redirect(url_for("blog.index")) 
 
-    elif reaction_id['like'] == 1:
+    elif reaction_id['favorite'] == 1 and reaction_id['like'] == None and reaction_id['dislike'] == None :
+        
+
+        db = get_db()
+
+        total_likes += 1
+
+        db.execute(f"UPDATE post SET likes = {total_likes} WHERE id = {post_id}")
+
+        db.execute(f"update reaction set like = {1} , dislike = {0}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))
+
+
+    elif reaction_id['like'] == 1 :
 
 
         db.execute(f"UPDATE reaction SET like = '{1}', dislike = '{0}' WHERE id = '{reaction_id['id']}'")
@@ -358,7 +374,6 @@ def like(post_id):
         db.commit()
 
         return redirect(url_for("blog.index"))
-
 
 
 @blog_bp.route("/post/<int:post_id>/dislike")
@@ -395,6 +410,21 @@ def dislike(post_id):
 
         return redirect(url_for("blog.index")) 
 
+    elif reaction_id['favorite'] == 1 and reaction_id['like'] == None and reaction_id['dislike'] == None :
+
+        db = get_db()
+
+        total_dislikes += 1
+
+        db.execute(f"UPDATE post SET dislikes = {total_dislikes} WHERE id = {post_id}")
+
+        db.execute(f"UPDATE reaction  SET like = {0} , dislike = {1}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index")) 
+
+
     elif reaction_id['dislike'] == 1 :
 
 
@@ -410,23 +440,36 @@ def dislike(post_id):
 
     elif reaction_id['like'] == 1 :  
 
-
-
         db.execute(f"UPDATE reaction SET like = '{0}', dislike = '{1}' WHERE id = '{reaction_id['id']}'")
-
 
         db.execute(f"UPDATE post SET likes = '{total_likes - 1}', dislikes = '{total_dislikes + 1}' WHERE id = {post_id}")
 
         db.commit()
 
         return redirect(url_for("blog.index"))
-        
+
+
 @blog_bp.route("/post/<int:post_id>/favorite")
 @login_required            
 def favorite(post_id):
 
     db = get_db()
 
-    db.execute(f"INSERT INTO reaction f WHERE post_id = {post_id} AND user_id = {session['uid']}")
+    favorite_id = db.execute(f"select * from reaction where post_id = {post_id} and user_id = {session['uid']}").fetchone()
 
-    return redirect(url_for("blog.index"))
+    if favorite_id == None :
+
+        db.execute(f"INSERT INTO reaction (post_id , user_id , favorite) VALUES (?,?,?);" ,(post_id , session['uid'] ,1))
+
+        db.commit()
+    
+        return redirect(url_for("blog.index"))
+
+    elif favorite_id['favorite'] == None :
+
+        db.execute(f"UPDATE reaction SET favorite = '{1}' WHERE id = {favorite_id['id']}")
+
+        db.commit()
+
+        return redirect(url_for("blog.index"))
+
