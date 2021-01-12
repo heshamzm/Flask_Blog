@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,request ,redirect, session , flash
+from flask import Blueprint, render_template,request ,redirect, session , flash,url_for
 from blog.db import get_db
 import sqlite3
 from functools import wraps
@@ -193,3 +193,14 @@ def get_users():
 
     # render 'list.html' blueprint with users
     return render_template('user/list.html', users=users)
+
+@user_bp.route('/users/<int:user_id>')
+@login_required
+def delete_user(user_id):
+    # get the DB connection
+    db = get_db()
+
+    db.execute(f"DELETE FROM user WHERE id = {user_id} ")
+    db.commit()
+
+    return redirect(url_for("user.get_users"))
