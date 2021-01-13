@@ -312,6 +312,7 @@ def edit_reply(post_id,reply_id):
 @blog_bp.route("/post/<int:post_id>/like")
 @login_required
 def like(post_id):
+    .
     db = get_db()
 
     num_of_likes = db.execute("SELECT likes FROM post WHERE id LIKE ?",(post_id,)).fetchone()

@@ -194,6 +194,8 @@ def get_users():
     # render 'list.html' blueprint with users
     return render_template('user/list.html', users=users)
 
+
+
 @user_bp.route('/users/<int:user_id>')
 @login_required
 def delete_user(user_id):
